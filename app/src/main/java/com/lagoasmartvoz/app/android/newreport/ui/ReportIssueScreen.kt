@@ -19,13 +19,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
@@ -51,11 +48,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
-import kotlin.text.category
+import com.lagoasmartvoz.app.android.widgets.LSVRoundedTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,36 +116,29 @@ fun ShowForm(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 item {
-                    OutlinedTextField(
+                    LSVRoundedTextField(
                         value = name,
                         onValueChange = { onEvent(ReportIssueEvent.NameChanged(it)) },
-                        label = { Text("Nome") },
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
+                        placeholder = "Nome"
                     )
                 }
 
                 item {
-                    OutlinedTextField(
+                    LSVRoundedTextField(
                         value = email,
                         onValueChange = { onEvent(ReportIssueEvent.EmailChanged(it)) },
-                        label = { Text("Email") },
+                        placeholder = "Email",
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                     )
                 }
 
                 item {
-                    OutlinedTextField(
+                    LSVRoundedTextField(
                         value = description,
                         onValueChange = { onEvent(ReportIssueEvent.DescriptionChanged(it)) },
-                        label = { Text("Descrição") },
+                        placeholder = "Descrição",
                         modifier = Modifier.fillMaxWidth(),
-                        trailingIcon = {
-                            Icon(Icons.Default.Star, contentDescription = "Ajuda IA", tint = Color(0xFF4A90E2))
-                        },
-                        maxLines = 4
                     )
                 }
 
