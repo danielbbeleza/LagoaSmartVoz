@@ -32,9 +32,9 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -134,12 +134,16 @@ fun ShowForm(
                 }
 
                 item {
-                    LSVRoundedTextField(
-                        value = description,
-                        onValueChange = { onEvent(ReportIssueEvent.DescriptionChanged(it)) },
-                        placeholder = "Descrição",
-                        modifier = Modifier.fillMaxWidth(),
-                    )
+                    Box {
+                        LSVRoundedTextField(
+                            value = description,
+                            onValueChange = { onEvent(ReportIssueEvent.DescriptionChanged(it)) },
+                            placeholder = "Descrição",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .height(250.dp)
+                        )
+                    }
                 }
 
                 item {
@@ -150,7 +154,7 @@ fun ShowForm(
                         expanded = expanded,
                         onExpandedChange = { expanded = !expanded }
                     ) {
-                        OutlinedTextField(
+                        TextField(
                             value = category,
                             onValueChange = {},
                             readOnly = true,

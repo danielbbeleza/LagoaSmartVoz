@@ -30,7 +30,8 @@ fun LagoaSmartVozTheme(
         lightColorScheme(
             primary = Color(0xFF6200EE),
             secondary = Color(0xFF03DAC5),
-            tertiary = Color(0xFF3700B3)
+            tertiary = Color(0xFF3700B3),
+            background = Color(0xFFf7f5f5)
         )
     }
     val typography = Typography(
