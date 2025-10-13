@@ -42,5 +42,7 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.coil.compose)
+    implementation(libs.androidx.viewmodel.compose)
     debugImplementation(libs.compose.ui.tooling)
 }
