@@ -52,8 +52,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.lagoasmartvoz.app.android.designsystem.dottedBorder
+import com.lagoasmartvoz.app.android.widgets.LSVDropdown
 import com.lagoasmartvoz.app.android.widgets.LSVRoundedTextField
-import com.lagoasmartvoz.app.android.widgets.RoundedDropdown
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -175,7 +175,7 @@ fun ShowForm(
                 item {
                     val categories = listOf("Iluminação", "Água", "Estrada", "Lixo", "Outro")
 
-                    RoundedDropdown(
+                    LSVDropdown(
                         selectedOption = selectedCategory,
                         options = categories,
                         placeholder = "Categoria",

@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun RoundedDropdown(
+fun LSVDropdown(
     selectedOption: String?,
     options: List<String>,
     placeholder: String,
@@ -65,13 +65,18 @@ fun RoundedDropdown(
             expanded = isExpanded,
             onDismissRequest = { onExpanded(!isExpanded) },
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(0.9f)
+                .clip(RoundedCornerShape(16.dp))
                 .background(Color.White)
-                .clip(RoundedCornerShape(8.dp))
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option) },
+                    text = {
+                        Text(
+                            text = option,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    },
                     onClick = {
                         onOptionSelected(option)
                     }
