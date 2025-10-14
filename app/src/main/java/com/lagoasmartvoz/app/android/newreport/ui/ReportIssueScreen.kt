@@ -100,7 +100,6 @@ fun ReportIssueScreen(
         selectedCategory = state.value.category,
         categoryIsExpanded = state.value.categoryIsExpanded,
         selectedImages = state.value.selectedImages,
-        cameraImageUri = state.value.cameraImageUri,
         isSubmitting = state.value.isSubmitting,
         errorMessage = state.value.errorMessage,
         onBackClick = onBackClick,
@@ -118,7 +117,6 @@ fun ShowForm(
     selectedCategory: String,
     categoryIsExpanded: Boolean,
     selectedImages: List<Uri>,
-    cameraImageUri: Uri?,
     isSubmitting: Boolean,
     errorMessage: String?,
     onBackClick: () -> Unit,
@@ -226,21 +224,10 @@ fun ShowForm(
                         }
 
                         item {
-//                            Box(
-//                                modifier = Modifier
-//                                    .size(90.dp)
-//                                    .clip(RoundedCornerShape(8.dp))
-//                                    .dottedBorder()
-//                                    .clickable { photoPickerLauncher.launch("image/*") },
-//                                contentAlignment = Alignment.Center
-//                            ) {
-//                                Icon(Icons.Default.Add, contentDescription = "Adicionar Foto", tint = Color.Gray)
-//                            }
                             AddPhotoButton(
-                                cameraImageUri = cameraImageUri,
                                 onCameraSelected = { onEvent(ReportIssueIntent.OnCameraSelected) },
-                                onGallerySelected = { onEvent(ReportIssueIntent.OnGallerySelected) },
-                                onPhotoAdded = { onEvent(ReportIssueIntent.PhotoTaken(it)) })
+                                onGallerySelected = { onEvent(ReportIssueIntent.OnGallerySelected) }
+                            )
                         }
                     }
                 }
@@ -280,10 +267,8 @@ fun ShowForm(
 
 @Composable
 fun AddPhotoButton(
-    cameraImageUri: Uri?,
     onCameraSelected: () -> Unit,
     onGallerySelected: () -> Unit,
-    onPhotoAdded: (Uri) -> Unit
 ) {
     // Store camera output URI
     var showPickerDialog by remember { mutableStateOf(false) }
@@ -335,12 +320,3 @@ fun AddPhotoButton(
         Icon(Icons.Filled.CameraAlt, contentDescription = "Adicionar Foto", tint = Color.Gray)
     }
 }
-
-
-data class ReportData(
-    val name: String,
-    val email: String,
-    val description: String,
-    val category: String,
-    val imageUris: List<Uri>
-)
