@@ -7,6 +7,7 @@ data class ReportIssueUiState(
     val email: String = "",
     val description: String = "",
     val category: String = "",
+    val categoryIsExpanded: Boolean = false,
     val selectedImages: List<Uri> = emptyList(),
     val isSubmitting: Boolean = false,
     val isSuccess: Boolean = false,
@@ -17,10 +18,11 @@ sealed interface ReportIssueEvent {
     data class NameChanged(val value: String) : ReportIssueEvent
     data class EmailChanged(val value: String) : ReportIssueEvent
     data class DescriptionChanged(val value: String) : ReportIssueEvent
-    data class CategoryChanged(val value: String) : ReportIssueEvent
+    data class OnCategorySelected(val category: String) : ReportIssueEvent
     data class OnImageAdded(val uris: List<Uri>) : ReportIssueEvent
     data class RemoveImage(val uri: Uri) : ReportIssueEvent
     object Submit : ReportIssueEvent
+    object OnDropdownClick : ReportIssueEvent
 }
 
 enum class NewReportCategory {

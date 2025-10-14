@@ -59,7 +59,8 @@ fun ReportIssueScreen(
         name = state.value.name,
         email = state.value.email,
         description = state.value.description,
-        category = state.value.category,
+        selectedCategory = state.value.category,
+        categoryIsExpanded = state.value.categoryIsExpanded,
         selectedImages = state.value.selectedImages,
         isSubmitting = state.value.isSubmitting,
         errorMessage = state.value.errorMessage,
@@ -75,7 +76,8 @@ fun ShowForm(
     name: String,
     email: String,
     description: String,
-    category: String,
+    selectedCategory: String,
+    categoryIsExpanded: Boolean,
     selectedImages: List<Uri>,
     isSubmitting: Boolean,
     errorMessage: String?,
@@ -144,17 +146,20 @@ fun ShowForm(
                     val categories = listOf("Iluminação", "Água", "Estrada", "Lixo", "Outro")
 
                     RoundedDropdown(
-                        selectedOption = categories.first(),
+                        selectedOption = selectedCategory,
                         options = categories,
                         placeholder = "Categoria",
-                        isExpanded = false,
-                        onOptionSelected = { onEvent(ReportIssueEvent.CategoryChanged(it)) },
-                        onExpanded = { },
+                        isExpanded = categoryIsExpanded,
+                        onOptionSelected = { onEvent(ReportIssueEvent.OnCategorySelected(it)) },
+                        onExpanded = { onEvent(ReportIssueEvent.OnDropdownClick) },
                     )
                 }
 
                 item {
-                    Text("Fotos", style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Black))
+                    Text(
+                        "Fotos",
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Black)
+                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
 

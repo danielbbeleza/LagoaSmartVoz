@@ -18,10 +18,10 @@ class ReportIssueViewModel : ViewModel() {
                     _uiState.value = _uiState.value.copy(selectedImages = uris)
                 }
             }
-            is ReportIssueEvent.CategoryChanged -> {
-                val category = event.value
+            is ReportIssueEvent.OnCategorySelected -> {
+                val category = event.category
                 if (category.isNotEmpty()) {
-                    _uiState.value = _uiState.value.copy(category = category)
+                    _uiState.value = _uiState.value.copy(category = category, categoryIsExpanded = false)
                 }
             }
             is ReportIssueEvent.DescriptionChanged -> {
@@ -48,6 +48,9 @@ class ReportIssueViewModel : ViewModel() {
                 _uiState.value = _uiState.value.copy(selectedImages = updatedUris)
             }
             ReportIssueEvent.Submit -> TODO()
+            ReportIssueEvent.OnDropdownClick -> {
+                _uiState.value = _uiState.value.copy(categoryIsExpanded = _uiState.value.categoryIsExpanded.not())
+            }
         }
     }
 }

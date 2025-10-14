@@ -63,8 +63,9 @@ fun RoundedDropdown(
 
         DropdownMenu(
             expanded = isExpanded,
-            onDismissRequest = { onExpanded },
+            onDismissRequest = { onExpanded(!isExpanded) },
             modifier = Modifier
+                .fillMaxWidth()
                 .background(Color.White)
                 .clip(RoundedCornerShape(8.dp))
         ) {
