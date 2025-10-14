@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,9 +21,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,9 +33,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,14 +54,44 @@ import coil3.compose.AsyncImage
 import com.lagoasmartvoz.app.android.designsystem.dottedBorder
 import com.lagoasmartvoz.app.android.widgets.LSVRoundedTextField
 import com.lagoasmartvoz.app.android.widgets.RoundedDropdown
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportIssueScreen(
-    viewModel: ReportIssueViewModel = viewModel { ReportIssueViewModel() },
+    viewModel: ReportIssueViewModel = viewModel(),
     onBackClick: () -> Unit,
 ) {
     val state = viewModel.uiState.collectAsState()
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let { viewModel.onIntent(ReportIssueIntent.OnImageAdded(it)) }
+    }
+
+    // Camera launcher
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { success ->
+        val uri = state.value.cameraImageUri
+        if (success && uri != null) {
+            viewModel.onIntent(ReportIssueIntent.PhotoTaken(uri))
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collectLatest { event ->
+            when (event) {
+                is ReportIssueEvent.LaunchCamera -> {
+                    cameraLauncher.launch(event.uri)
+                }
+                ReportIssueEvent.LaunchGallery -> {
+                    galleryLauncher.launch("image/*")
+                }
+            }
+        }
+    }
 
     ShowForm(
         name = state.value.name,
@@ -62,10 +100,11 @@ fun ReportIssueScreen(
         selectedCategory = state.value.category,
         categoryIsExpanded = state.value.categoryIsExpanded,
         selectedImages = state.value.selectedImages,
+        cameraImageUri = state.value.cameraImageUri,
         isSubmitting = state.value.isSubmitting,
         errorMessage = state.value.errorMessage,
         onBackClick = onBackClick,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onIntent,
     )
 }
 
@@ -79,19 +118,12 @@ fun ShowForm(
     selectedCategory: String,
     categoryIsExpanded: Boolean,
     selectedImages: List<Uri>,
+    cameraImageUri: Uri?,
     isSubmitting: Boolean,
     errorMessage: String?,
     onBackClick: () -> Unit,
-    onEvent: (ReportIssueEvent) -> Unit
+    onEvent: (ReportIssueIntent) -> Unit
 ) {
-
-    val photoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetMultipleContents()
-    ) { uris ->
-        if (uris.isNotEmpty()) {
-            onEvent(ReportIssueEvent.OnImageAdded(uris))
-        }
-    }
 
     Scaffold(
         modifier = Modifier.padding(innerPadding),
@@ -114,7 +146,7 @@ fun ShowForm(
                 item {
                     LSVRoundedTextField(
                         value = name,
-                        onValueChange = { onEvent(ReportIssueEvent.NameChanged(it)) },
+                        onValueChange = { onEvent(ReportIssueIntent.NameChanged(it)) },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = "Nome"
                     )
@@ -123,7 +155,7 @@ fun ShowForm(
                 item {
                     LSVRoundedTextField(
                         value = email,
-                        onValueChange = { onEvent(ReportIssueEvent.EmailChanged(it)) },
+                        onValueChange = { onEvent(ReportIssueIntent.EmailChanged(it)) },
                         placeholder = "Email",
                         modifier = Modifier.fillMaxWidth(),
                     )
@@ -133,7 +165,7 @@ fun ShowForm(
                     Box {
                         LSVRoundedTextField(
                             value = description,
-                            onValueChange = { onEvent(ReportIssueEvent.DescriptionChanged(it)) },
+                            onValueChange = { onEvent(ReportIssueIntent.DescriptionChanged(it)) },
                             placeholder = "Descrição",
                             modifier = Modifier
                                 .fillMaxSize()
@@ -150,8 +182,8 @@ fun ShowForm(
                         options = categories,
                         placeholder = "Categoria",
                         isExpanded = categoryIsExpanded,
-                        onOptionSelected = { onEvent(ReportIssueEvent.OnCategorySelected(it)) },
-                        onExpanded = { onEvent(ReportIssueEvent.OnDropdownClick) },
+                        onOptionSelected = { onEvent(ReportIssueIntent.OnCategorySelected(it)) },
+                        onExpanded = { onEvent(ReportIssueIntent.OnDropdownClick) },
                     )
                 }
 
@@ -177,7 +209,7 @@ fun ShowForm(
                                     modifier = Modifier.fillMaxSize()
                                 )
                                 IconButton(
-                                    onClick = { onEvent(ReportIssueEvent.RemoveImage(uri)) },
+                                    onClick = { onEvent(ReportIssueIntent.RemoveImage(uri)) },
                                     modifier = Modifier
                                         .align(Alignment.TopEnd)
                                         .size(20.dp)
@@ -194,23 +226,28 @@ fun ShowForm(
                         }
 
                         item {
-                            Box(
-                                modifier = Modifier
-                                    .size(90.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .dottedBorder()
-                                    .clickable { photoPickerLauncher.launch("image/*") },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(Icons.Default.Add, contentDescription = "Adicionar Foto", tint = Color.Gray)
-                            }
+//                            Box(
+//                                modifier = Modifier
+//                                    .size(90.dp)
+//                                    .clip(RoundedCornerShape(8.dp))
+//                                    .dottedBorder()
+//                                    .clickable { photoPickerLauncher.launch("image/*") },
+//                                contentAlignment = Alignment.Center
+//                            ) {
+//                                Icon(Icons.Default.Add, contentDescription = "Adicionar Foto", tint = Color.Gray)
+//                            }
+                            AddPhotoButton(
+                                cameraImageUri = cameraImageUri,
+                                onCameraSelected = { onEvent(ReportIssueIntent.OnCameraSelected) },
+                                onGallerySelected = { onEvent(ReportIssueIntent.OnGallerySelected) },
+                                onPhotoAdded = { onEvent(ReportIssueIntent.PhotoTaken(it)) })
                         }
                     }
                 }
 
                 item {
                     Button(
-                        onClick = { onEvent(ReportIssueEvent.Submit) },
+                        onClick = { onEvent(ReportIssueIntent.Submit) },
                         enabled = !isSubmitting,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -239,6 +276,64 @@ fun ShowForm(
                 }
             }
         })
+}
+
+@Composable
+fun AddPhotoButton(
+    cameraImageUri: Uri?,
+    onCameraSelected: () -> Unit,
+    onGallerySelected: () -> Unit,
+    onPhotoAdded: (Uri) -> Unit
+) {
+    // Store camera output URI
+    var showPickerDialog by remember { mutableStateOf(false) }
+
+    // Gallery picker launcher
+
+
+    // Show the picker dialog
+    if (showPickerDialog) {
+        AlertDialog(
+            onDismissRequest = { showPickerDialog = false },
+            title = { Text("Adicionar foto") },
+            text = { Text("Escolhe de onde queres adicionar a imagem") },
+            confirmButton = {},
+            dismissButton = {}
+        )
+
+        AlertDialog(
+            onDismissRequest = { showPickerDialog = false },
+            confirmButton = {},
+            text = {
+                Column {
+                    TextButton(onClick = {
+                        showPickerDialog = false
+                        onCameraSelected()
+                    }) { Text("📸 Tirar foto") }
+
+
+                    TextButton(onClick = {
+                        showPickerDialog = false
+                        onGallerySelected()
+                    }) {
+                        Text("🖼️ Escolher da galeria")
+                    }
+                }
+            },
+        )
+    }
+
+    // Your dotted border button
+    Box(
+        modifier = Modifier
+            .size(100.dp)
+            .dottedBorder(color = Color.Gray)
+            .clip(RoundedCornerShape(12.dp))
+            .clickable { showPickerDialog = true },
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(Icons.Filled.CameraAlt, contentDescription = "Adicionar Foto", tint = Color.Gray)
+    }
 }
 
 

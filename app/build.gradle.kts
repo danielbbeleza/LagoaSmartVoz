@@ -44,5 +44,6 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.coil.compose)
     implementation(libs.androidx.viewmodel.compose)
+    implementation(libs.material.icons.extended)
     debugImplementation(libs.compose.ui.tooling)
 }
