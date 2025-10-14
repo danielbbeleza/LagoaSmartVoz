@@ -76,7 +76,7 @@ fun ReportIssueScreen(
     ) { success ->
         val uri = state.value.cameraImageUri
         if (success && uri != null) {
-            viewModel.onIntent(ReportIssueIntent.PhotoTaken(uri))
+            viewModel.onIntent(ReportIssueIntent.OnImageAdded(uri))
         }
     }
 

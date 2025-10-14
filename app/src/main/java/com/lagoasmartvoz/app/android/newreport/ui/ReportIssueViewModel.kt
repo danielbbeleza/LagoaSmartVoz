@@ -75,6 +75,9 @@ class ReportIssueViewModel(
                     photoFile
                 )
                 _uiState.value = _uiState.value.copy(cameraImageUri = uri)
+                viewModelScope.launch {
+                    _uiEvent.emit(ReportIssueEvent.LaunchCamera(uri))
+                }
             }
             ReportIssueIntent.OnGallerySelected -> {
                 viewModelScope.launch {
