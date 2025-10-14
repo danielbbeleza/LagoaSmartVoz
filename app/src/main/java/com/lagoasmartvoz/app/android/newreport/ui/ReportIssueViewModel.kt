@@ -12,7 +12,12 @@ class ReportIssueViewModel : ViewModel() {
 
     fun onEvent(event: ReportIssueEvent) {
         when (event) {
-            is ReportIssueEvent.AddImages -> TODO()
+            is ReportIssueEvent.OnImageAdded -> {
+                val uris = event.uris
+                if (uris.isNotEmpty()) {
+                    _uiState.value = _uiState.value.copy(selectedImages = uris)
+                }
+            }
             is ReportIssueEvent.CategoryChanged -> TODO()
             is ReportIssueEvent.DescriptionChanged -> {
                 val description = event.value
@@ -32,7 +37,11 @@ class ReportIssueViewModel : ViewModel() {
                     _uiState.value = _uiState.value.copy(name = name)
                 }
             }
-            is ReportIssueEvent.RemoveImage -> TODO()
+            is ReportIssueEvent.RemoveImage -> {
+                val imageUri = event.uri
+                val updatedUris = _uiState.value.selectedImages.filter { it != imageUri }
+                _uiState.value = _uiState.value.copy(selectedImages = updatedUris)
+            }
             ReportIssueEvent.Submit -> TODO()
         }
     }

@@ -87,7 +87,7 @@ fun ShowForm(
         contract = ActivityResultContracts.GetMultipleContents()
     ) { uris ->
         if (uris.isNotEmpty()) {
-            onEvent(ReportIssueEvent.AddImages(uris))
+            onEvent(ReportIssueEvent.OnImageAdded(uris))
         }
     }
 

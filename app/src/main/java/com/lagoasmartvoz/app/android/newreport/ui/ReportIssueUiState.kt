@@ -18,7 +18,7 @@ sealed interface ReportIssueEvent {
     data class EmailChanged(val value: String) : ReportIssueEvent
     data class DescriptionChanged(val value: String) : ReportIssueEvent
     data class CategoryChanged(val value: String) : ReportIssueEvent
-    data class AddImages(val uris: List<Uri>) : ReportIssueEvent
+    data class OnImageAdded(val uris: List<Uri>) : ReportIssueEvent
     data class RemoveImage(val uri: Uri) : ReportIssueEvent
     object Submit : ReportIssueEvent
 }
