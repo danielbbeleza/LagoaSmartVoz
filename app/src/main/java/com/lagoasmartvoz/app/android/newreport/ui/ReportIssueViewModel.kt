@@ -18,7 +18,12 @@ class ReportIssueViewModel : ViewModel() {
                     _uiState.value = _uiState.value.copy(selectedImages = uris)
                 }
             }
-            is ReportIssueEvent.CategoryChanged -> TODO()
+            is ReportIssueEvent.CategoryChanged -> {
+                val category = event.value
+                if (category.isNotEmpty()) {
+                    _uiState.value = _uiState.value.copy(category = category)
+                }
+            }
             is ReportIssueEvent.DescriptionChanged -> {
                 val description = event.value
                 if (description.isNotEmpty()) {

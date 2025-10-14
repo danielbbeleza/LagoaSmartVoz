@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
+import com.lagoasmartvoz.app.android.designsystem.dottedBorder
 import com.lagoasmartvoz.app.android.widgets.LSVRoundedTextField
 import com.lagoasmartvoz.app.android.widgets.RoundedDropdown
 
@@ -193,7 +193,7 @@ fun ShowForm(
                                 modifier = Modifier
                                     .size(90.dp)
                                     .clip(RoundedCornerShape(8.dp))
-                                    .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                                    .dottedBorder()
                                     .clickable { photoPickerLauncher.launch("image/*") },
                                 contentAlignment = Alignment.Center
                             ) {
@@ -209,8 +209,8 @@ fun ShowForm(
                         enabled = !isSubmitting,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(56.dp),
-                        shape = RoundedCornerShape(12.dp)
+                            .height(72.dp),
+                        shape = RoundedCornerShape(24.dp)
                     ) {
                         if (isSubmitting) {
                             CircularProgressIndicator(
@@ -218,7 +218,7 @@ fun ShowForm(
                                 modifier = Modifier.size(20.dp)
                             )
                         } else {
-                            Text("Enviar", style = MaterialTheme.typography.titleMedium)
+                            Text("Enviar", style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold))
                         }
                     }
                 }
