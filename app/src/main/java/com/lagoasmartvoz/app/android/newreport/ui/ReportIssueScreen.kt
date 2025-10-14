@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,10 +35,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -145,7 +142,6 @@ fun ShowForm(
 
                 item {
                     val categories = listOf("Iluminação", "Água", "Estrada", "Lixo", "Outro")
-                    var expanded by remember { mutableStateOf(false) }
 
                     RoundedDropdown(
                         selectedOption = categories.first(),
@@ -153,41 +149,15 @@ fun ShowForm(
                         placeholder = "Categoria",
                         isExpanded = false,
                         onOptionSelected = { onEvent(ReportIssueEvent.CategoryChanged(it)) },
-                        onExpanded = {  },
+                        onExpanded = { },
                     )
-//                    RoundedDropdown(
-//                        expanded = expanded,
-//                        onExpandedChange = { expanded = !expanded }
-//                    ) {
-//                        TextField(
-//                            value = category,
-//                            onValueChange = {},
-//                            readOnly = true,
-//                            label = { Text("Categoria") },
-//                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-//                            modifier = Modifier
-//                                .menuAnchor()
-//                                .fillMaxWidth()
-//                        )
-//                        ExposedDropdownMenu(
-//                            expanded = expanded,
-//                            onDismissRequest = { expanded = false }
-//                        ) {
-//                            categories.forEach { option ->
-//                                DropdownMenuItem(
-//                                    text = { Text(option) },
-//                                    onClick = {
-//                                        onEvent(ReportIssueEvent.CategoryChanged(option))
-//                                        expanded = false
-//                                    }
-//                                )
-//                            }
-//                        }
-//                    }
                 }
 
                 item {
-                    Text("Fotos", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
+                    Text("Fotos", style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Black))
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         items(selectedImages) { uri ->
                             Box(

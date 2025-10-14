@@ -11,12 +11,27 @@ class ReportIssueViewModel : ViewModel() {
 
 
     fun onEvent(event: ReportIssueEvent) {
-        when(event) {
+        when (event) {
             is ReportIssueEvent.AddImages -> TODO()
             is ReportIssueEvent.CategoryChanged -> TODO()
-            is ReportIssueEvent.DescriptionChanged -> TODO()
-            is ReportIssueEvent.EmailChanged -> TODO()
-            is ReportIssueEvent.NameChanged -> TODO()
+            is ReportIssueEvent.DescriptionChanged -> {
+                val description = event.value
+                if (description.isNotEmpty()) {
+                    _uiState.value = _uiState.value.copy(description = description)
+                }
+            }
+            is ReportIssueEvent.EmailChanged -> {
+                val email = event.value
+                if (email.isNotEmpty()) {
+                    _uiState.value = _uiState.value.copy(email = email)
+                }
+            }
+            is ReportIssueEvent.NameChanged -> {
+                val name = event.value
+                if (name.isNotEmpty()) {
+                    _uiState.value = _uiState.value.copy(name = name)
+                }
+            }
             is ReportIssueEvent.RemoveImage -> TODO()
             ReportIssueEvent.Submit -> TODO()
         }
