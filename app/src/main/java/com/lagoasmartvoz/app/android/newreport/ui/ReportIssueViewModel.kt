@@ -34,25 +34,25 @@ class ReportIssueViewModel(
             is ReportIssueIntent.OnCategorySelected -> {
                 val category = event.category
                 if (category.isNotEmpty()) {
-                    _uiState.value = _uiState.value.copy(category = category, categoryIsExpanded = false)
+                    _uiState.value = _uiState.value.copy(category = (category to null), categoryIsExpanded = false)
                 }
             }
             is ReportIssueIntent.DescriptionChanged -> {
                 val description = event.value
                 if (description.isNotEmpty()) {
-                    _uiState.value = _uiState.value.copy(description = description)
+                    _uiState.value = _uiState.value.copy(description = (description to null))
                 }
+
             }
             is ReportIssueIntent.EmailChanged -> {
                 val email = event.value
-                if (email.isNotEmpty()) {
-                    _uiState.value = _uiState.value.copy(email = email)
-                }
+                _uiState.value = _uiState.value.copy(email = (email to null))
+
             }
             is ReportIssueIntent.NameChanged -> {
                 val name = event.value
                 if (name.isNotEmpty()) {
-                    _uiState.value = _uiState.value.copy(name = name)
+                    _uiState.value = _uiState.value.copy(name = (name to null))
                 }
             }
             is ReportIssueIntent.RemoveImage -> {
@@ -60,7 +60,9 @@ class ReportIssueViewModel(
                 val updatedUris = _uiState.value.selectedImages.filter { it != imageUri }
                 _uiState.value = _uiState.value.copy(selectedImages = updatedUris)
             }
-            ReportIssueIntent.Submit -> TODO()
+            ReportIssueIntent.Submit -> {
+                validateFields(uiState.value)
+            }
             ReportIssueIntent.OnDropdownClick -> {
                 _uiState.value = _uiState.value.copy(categoryIsExpanded = _uiState.value.categoryIsExpanded.not())
             }
@@ -83,6 +85,47 @@ class ReportIssueViewModel(
                 viewModelScope.launch {
                     _uiEvent.emit(ReportIssueEvent.LaunchGallery)
                 }
+            }
+        }
+    }
+
+    private fun validateFields(state: ReportIssueUiState) {
+        val name = state.name
+        if (name.first.isEmpty()) {
+            _uiState.value =
+                _uiState.value.copy(name = ("" to ReportIssueUiError("Adicione o seu nome")))
+        }
+
+        val category = state.category
+        if (category.first.isEmpty()) {
+            _uiState.value =
+                _uiState.value.copy(category = ("" to ReportIssueUiError("Seleccione uma categoria")))
+        }
+        val description = state.description
+        if (description.first.isEmpty()) {
+            _uiState.value = _uiState.value.copy(description = ("" to ReportIssueUiError("Adicione uma descrição")))
+        }
+
+        val email = state.email
+        if (email.first.isNotBlank() && android.util.Patterns.EMAIL_ADDRESS.matcher(email.first).matches()) {
+            _uiState.value = _uiState.value.copy(email = ("" to ReportIssueUiError("Email inválido")))
+        }
+
+        if (name.first.isNotEmpty() && name.second == null
+            && category.first.isNotEmpty() && category.second == null
+            && description.first.isNotEmpty() && description.second == null
+            && email.first.isNotBlank() && android.util.Patterns.EMAIL_ADDRESS.matcher(email.first).matches() && email.second == null
+        ) {
+            viewModelScope.launch {
+                _uiEvent.emit(
+                    ReportIssueEvent.Submit(
+                        name = name.first,
+                        email = email.first,
+                        description = description.first,
+                        category = category.first,
+                        selectedImages = state.selectedImages
+                    )
+                )
             }
         }
     }

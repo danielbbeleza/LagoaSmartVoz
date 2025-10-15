@@ -1,6 +1,7 @@
 package com.lagoasmartvoz.app.android.newreport.ui
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -47,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -80,6 +82,7 @@ fun ReportIssueScreen(
         }
     }
 
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collectLatest { event ->
             when (event) {
@@ -89,15 +92,16 @@ fun ReportIssueScreen(
                 ReportIssueEvent.LaunchGallery -> {
                     galleryLauncher.launch("image/*")
                 }
+                is ReportIssueEvent.Submit -> Toast.makeText(context, "Ocorrência reportada com sucesso", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     ShowForm(
-        name = state.value.name,
-        email = state.value.email,
-        description = state.value.description,
-        selectedCategory = state.value.category,
+        name = state.value.name.first,
+        email = state.value.email.first,
+        description = state.value.description.first,
+        selectedCategory = state.value.category.first,
         categoryIsExpanded = state.value.categoryIsExpanded,
         selectedImages = state.value.selectedImages,
         isSubmitting = state.value.isSubmitting,
