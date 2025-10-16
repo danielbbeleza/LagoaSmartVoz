@@ -49,6 +49,12 @@ class ReportIssueViewModel(
                 _uiState.value = _uiState.value.copy(email = (email to null))
 
             }
+
+            is ReportIssueIntent.OnLocationChanged -> {
+                val location = event.location
+                _uiState.value = _uiState.value.copy(location = (location to null))
+
+            }
             is ReportIssueIntent.NameChanged -> {
                 val name = event.value
                 if (name.isNotEmpty()) {
@@ -94,6 +100,12 @@ class ReportIssueViewModel(
         if (name.first.isEmpty()) {
             _uiState.value =
                 _uiState.value.copy(name = ("" to ReportIssueUiError("Adicione o seu nome")))
+        }
+
+        val location = state.location
+        if (location.first.isEmpty()) {
+            _uiState.value =
+                _uiState.value.copy(name = ("" to ReportIssueUiError("Adicione uma localização")))
         }
 
         val category = state.category

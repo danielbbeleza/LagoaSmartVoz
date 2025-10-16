@@ -100,6 +100,7 @@ fun ReportIssueScreen(
     ShowForm(
         name = state.value.name.first,
         email = state.value.email.first,
+        location = state.value.location.first,
         description = state.value.description.first,
         selectedCategory = state.value.category.first,
         categoryIsExpanded = state.value.categoryIsExpanded,
@@ -116,6 +117,7 @@ fun ReportIssueScreen(
 fun ShowForm(
     innerPadding: PaddingValues = PaddingValues(),
     name: String,
+    location: String,
     email: String,
     description: String,
     selectedCategory: String,
@@ -145,6 +147,15 @@ fun ShowForm(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                item {
+                    LSVRoundedTextField(
+                        value = name,
+                        onValueChange = { onEvent(ReportIssueIntent.NameChanged(it)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = "Nome"
+                    )
+                }
+
                 item {
                     LSVRoundedTextField(
                         value = name,

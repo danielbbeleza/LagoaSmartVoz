@@ -5,6 +5,7 @@ import android.net.Uri
 data class ReportIssueUiState(
     val name: Pair<String, ReportIssueUiError?> = ("" to null),
     val email: Pair<String, ReportIssueUiError?> = ("" to null),
+    val location: Pair<String, ReportIssueUiError?> = ("" to null),
     val description: Pair<String, ReportIssueUiError?> = ("" to null),
     val category: Pair<String, ReportIssueUiError?> = ("" to null),
     val categoryIsExpanded: Boolean = false,
@@ -17,6 +18,7 @@ data class ReportIssueUiState(
 sealed interface ReportIssueIntent {
     data class NameChanged(val value: String) : ReportIssueIntent
     data class EmailChanged(val value: String) : ReportIssueIntent
+    data class OnLocationChanged(val location: String) : ReportIssueIntent
     data class DescriptionChanged(val value: String) : ReportIssueIntent
     data class OnCategorySelected(val category: String) : ReportIssueIntent
     data class OnImageAdded(val uri: Uri) : ReportIssueIntent
