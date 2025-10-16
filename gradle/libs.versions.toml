@@ -1,11 +1,13 @@
 [versions]
-agp = "8.10.0"
-kotlin = "2.0.0"
-compose = "1.5.4"
-compose-material3 = "1.1.2"
-androidx-activityCompose = "1.8.0"
-coil = "3.0.4"
-viewmodel-compose = "2.9.4"
+agp = "8.13.0"
+kotlin = "2.2.20"
+compose = "1.9.3"
+compose-material3 = "1.4.0"
+androidx-activityCompose = "1.11.0"
+coil = "3.3.0"
+viewmodel-compose = "2.9.5"
+compose-navigation = "2.9.1"
+material-icons-extended = "1.7.8"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -15,9 +17,11 @@ compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = 
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
+compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "compose-navigation"}
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 androidx-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "viewmodel-compose" }
-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "material-icons-extended"}
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.lagoasmartvoz.app.android"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "com.lagoasmartvoz.app.android"
         minSdk = 24
